@@ -270,7 +270,7 @@ class Yolo_dataset(Dataset):
         if not self.train:
             return self._get_val_item(index)
         img_path = self.imgs[index]
-        bboxes = np.array(self.truth.get(img_path), dtype=np.float)
+        bboxes = np.array(self.truth.get(img_path), dtype=np.float32)
         img_path = os.path.join(self.cfg.dataset_dir, img_path)
         use_mixup = self.cfg.mixup
         if random.randint(0, 1):
@@ -291,14 +291,14 @@ class Yolo_dataset(Dataset):
         for i in range(use_mixup + 1):
             if i != 0:
                 img_path = random.choice(list(self.truth.keys()))
-                bboxes = np.array(self.truth.get(img_path), dtype=np.float)
+                bboxes = np.array(self.truth.get(img_path), dtype=np.float32)
                 img_path = os.path.join(self.cfg.dataset_dir, img_path)
             img = cv2.imread(img_path)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             if img is None:
                 continue
             oh, ow, oc = img.shape
-            dh, dw, dc = np.array(np.array([oh, ow, oc]) * self.cfg.jitter, dtype=np.int)
+            dh, dw, dc = np.array(np.array([oh, ow, oc]) * self.cfg.jitter, dtype=np.int32)
 
             dhue = rand_uniform_strong(-self.cfg.hue, self.cfg.hue)
             dsat = rand_scale(self.cfg.saturation)
@@ -390,7 +390,7 @@ class Yolo_dataset(Dataset):
         """
         """
         img_path = self.imgs[index]
-        bboxes_with_cls_id = np.array(self.truth.get(img_path), dtype=np.float)
+        bboxes_with_cls_id = np.array(self.truth.get(img_path), dtype=np.float32)
         img = cv2.imread(os.path.join(self.cfg.dataset_dir, img_path))
         # img_height, img_width = img.shape[:2]
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
